@@ -71,9 +71,9 @@ def create_app(config_name='development'):
     # Initialize extensions
     CORS(app, origins=[
         "http://localhost:3000",
+        "https://your-frontend-domain.vercel.app",
         "https://*.vercel.app",
-        "https://*.netlify.app",
-        "https://regulense-frontend.vercel.app"
+        "https://*.netlify.app"
     ])
     init_database(app)
     
