@@ -1,0 +1,31 @@
+{
+  "name": "regulense-signaling-server",
+  "version": "1.0.0",
+  "description": "WebRTC signaling server for Regulense mobile camera integration",
+  "main": "signaling-server.js",
+  "scripts": {
+    "start": "node signaling-server.js",
+    "dev": "nodemon signaling-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webrtc",
+    "signaling",
+    "socket.io",
+    "mobile",
+    "camera"
+  ],
+  "author": "Regulense Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
