@@ -36,6 +36,24 @@ class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///regulense_prod.db'
+    
+    # Railway-specific optimizations
+    MAX_CONTENT_LENGTH = int(os.environ.get('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))
+    OCR_CONFIDENCE_THRESHOLD = float(os.environ.get('OCR_CONFIDENCE_THRESHOLD', 0.5))
+    
+    # Logging configuration for Railway
+    LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+    
+    @staticmethod
+    def init_app(app):
+        Config.init_app(app)
+        
+        # Configure logging for Railway
+        import logging
+        logging.basicConfig(
+            level=getattr(logging, app.config.get('LOG_LEVEL', 'INFO')),
+            format='%(asctime)s %(levelname)s %(name)s %(message)s'
+        )
 
 class TestingConfig(Config):
     """Testing configuration"""

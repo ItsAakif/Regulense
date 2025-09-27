@@ -2,8 +2,29 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "cd app && python -m gunicorn api.main:app --bind 0.0.0.0:$PORT"
+startCommand = "cd app && gunicorn api.main:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --max-requests 1000 --max-requests-jitter 50"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+
+# Environment variables for Python version and build
+[variables]
+PYTHON_VERSION = "3.11"
+NIXPACKS_PYTHON_VERSION = "3.11"
+# Flask Configuration
+FLASK_ENV = "production"
+FLASK_DEBUG = "False"
+# Optimize for OCR processing
+PYTHONUNBUFFERED = "1"
+# Database Configuration
+DATABASE_URL = "sqlite:///regulense_prod.db"
+# File Upload Configuration
+MAX_CONTENT_LENGTH = "16777216"
+# OCR Configuration
+OCR_CONFIDENCE_THRESHOLD = "0.5"
+OCR_LANGUAGE = "en"
+# Logging Configuration
+LOG_LEVEL = "INFO"
+# Increase memory limits for PaddleOCR
+RAILWAY_MEMORY_LIMIT = "2048"

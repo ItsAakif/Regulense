@@ -1,0 +1,20 @@
+[phases.setup]
+nixPkgs = ['python311', 'libGL', 'libglib', 'glibc']
+
+[phases.install]
+cmds = [
+    'pip install --upgrade pip',
+    'pip install -r requirements.txt'
+]
+
+[phases.build]
+cmds = [
+    'echo "Build phase completed"'
+]
+
+[start]
+cmd = 'gunicorn api.main:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --max-requests 1000 --max-requests-jitter 50'
+
+[variables]
+PYTHON_VERSION = '3.11'
+PYTHONUNBUFFERED = '1'

@@ -8,6 +8,20 @@ from paddleocr import PaddleOCR
 
 logger = logging.getLogger(__name__)
 
+def convert_numpy_types(obj):
+    """Convert numpy types to native Python types for JSON serialization."""
+    if isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, dict):
+        return {key: convert_numpy_types(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_numpy_types(item) for item in obj]
+    return obj
+
 class PaddleOCRProcessor:
     """Real PaddleOCR processor for text extraction from images."""
     
@@ -163,33 +177,37 @@ class PaddleOCRProcessor:
                         # Create word entry with safe bbox processing
                         try:
                             if bbox and len(bbox) > 0:
+                                # Convert numpy array to list if needed
+                                if hasattr(bbox, 'tolist'):
+                                    bbox = bbox.tolist()
+                                
                                 # Handle different bbox formats
                                 if isinstance(bbox[0], (list, tuple)) and len(bbox[0]) >= 2:
                                     # Standard format: [[x1,y1], [x2,y2], [x3,y3], [x4,y4]]
-                                    x_coords = [point[0] for point in bbox if len(point) >= 2]
-                                    y_coords = [point[1] for point in bbox if len(point) >= 2]
+                                    x_coords = [float(point[0]) for point in bbox if len(point) >= 2]
+                                    y_coords = [float(point[1]) for point in bbox if len(point) >= 2]
                                     
                                     if x_coords and y_coords:
                                         position = {
-                                            'x': min(x_coords),
-                                            'y': min(y_coords),
-                                            'width': max(x_coords) - min(x_coords),
-                                            'height': max(y_coords) - min(y_coords)
+                                            'x': float(min(x_coords)),
+                                            'y': float(min(y_coords)),
+                                            'width': float(max(x_coords) - min(x_coords)),
+                                            'height': float(max(y_coords) - min(y_coords))
                                         }
                                     else:
-                                        position = {'x': 0, 'y': 0, 'width': 0, 'height': 0}
+                                        position = {'x': 0.0, 'y': 0.0, 'width': 0.0, 'height': 0.0}
                                 else:
                                     # Fallback for unexpected format
-                                    position = {'x': 0, 'y': 0, 'width': 0, 'height': 0}
+                                    position = {'x': 0.0, 'y': 0.0, 'width': 0.0, 'height': 0.0}
                             else:
-                                position = {'x': 0, 'y': 0, 'width': 0, 'height': 0}
+                                position = {'x': 0.0, 'y': 0.0, 'width': 0.0, 'height': 0.0}
                         except Exception as e:
                             logger.warning(f"Error processing bbox: {e}")
-                            position = {'x': 0, 'y': 0, 'width': 0, 'height': 0}
+                            position = {'x': 0.0, 'y': 0.0, 'width': 0.0, 'height': 0.0}
                         
                         word_entry = {
                             'text': text,
-                            'confidence': confidence,
+                            'confidence': float(confidence),
                             'bbox': bbox,
                             'position': position
                         }
@@ -213,6 +231,10 @@ class PaddleOCRProcessor:
             }
             
             logger.info(f"OCR extraction completed for {image_path}: {len(all_text)} lines, avg confidence: {avg_confidence:.2f}")
+            
+            # Convert numpy types to native Python types for JSON serialization
+            extracted_data = convert_numpy_types(extracted_data)
+            
             return extracted_data
             
         except Exception as e:
