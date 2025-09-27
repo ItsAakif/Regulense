@@ -1,6 +1,6 @@
 # Regulense - Smart Compliance Monitoring System
 
-**Smart India Hackathon 2025 | Problem Statement: SIH1737**
+**Smart India Hackathon 2025 | Problem Statement: SIH25057**
 
 A comprehensive AI-powered solution for automated compliance monitoring and regulatory document verification using computer vision and machine learning technologies.
 
@@ -84,7 +84,7 @@ Regulense is an intelligent compliance monitoring system that leverages:
   - Pi 3 processing power insufficient for real-time ML inference
   - Memory limitations affecting concurrent processing
 
-**We Need:**
+**We Nee:**
 - **Target Hardware**: Raspberry Pi 5 + Pi Camera 3 NoIR Module
 - **Benefits**: 
   - Enhanced processing power for edge-based ML inference
