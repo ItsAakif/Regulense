@@ -63,10 +63,7 @@ def handle_errors(f):
             }), 500
     return decorated_function
 
-def create_app(config_name=None):
-    if config_name is None:
-        config_name = os.environ.get('FLASK_ENV', 'development')
-    
+def create_app(config_name='development'):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
