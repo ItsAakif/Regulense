@@ -970,6 +970,15 @@ def capture_stream():
         logger.error(f"Error capturing stream: {str(e)}")
         return jsonify({'error': f'Error capturing image: {str(e)}'}), 500
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint for Railway deployment monitoring"""
+    return jsonify({
+        'status': 'healthy',
+        'message': 'Regulense API is running',
+        'timestamp': datetime.now().isoformat()
+    }), 200
+
 if __name__ == '__main__':
     print("Starting Flask application...")
     print("Flask app created successfully")
